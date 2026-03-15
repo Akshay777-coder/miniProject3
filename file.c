@@ -24,7 +24,7 @@ int login();
 void fileMenu(char *username);
 void createFile(char *username);
 void readFile(char *username);
-void updateFile(char *username);
+void appendFile(char *username);
 void listFiles(char *username);
 
 int main() {
@@ -104,14 +104,14 @@ void fileMenu(char *username) {
     int choice;
     while (1) {
         printf("\n--- USER PANEL: %s ---\n", username);
-        printf("1. Create/Write File\n2. Read File\n3. Update (Append) File\n4. List Files\n5. Logout\n");
+        printf("1. Create/Write File\n2. Read File\n3. Append File\n4. List Files\n5. Logout\n");
         printf("Choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
             case 1: createFile(username); break;
             case 2: readFile(username); break;
-            case 3: updateFile(username); break;
+            case 3: appendFile(username); break;
             case 4: listFiles(username); break;
             case 5: return; // Back to auth menu
             default: printf("Invalid.\n");
@@ -121,10 +121,10 @@ void fileMenu(char *username) {
 
 void createFile(char *username) {
     char filename[50], path[100], content[200];
-    printf("Enter filename (e.g., notes.txt): ");
+    printf("Enter filename: ");
     scanf("%49s", filename);
     
-    sprintf(path, "%s/%s", username, filename); // Creates path: username/filename
+    sprintf(path, "%s/%s.txt", username, filename); // Creates path: username/filename.txt
     
     FILE *fp = fopen(path, "w");
     printf("Enter content: ");
@@ -140,7 +140,7 @@ void readFile(char *username) {
     printf("Enter filename to read: ");
     scanf("%49s", filename);
     
-    sprintf(path, "%s/%s", username, filename);
+    sprintf(path, "%s/%s.txt", username, filename);
     FILE *fp = fopen(path, "r");
     if (!fp) { printf("File not found!\n"); return; }
 
@@ -150,12 +150,12 @@ void readFile(char *username) {
     printf("\n---------------\n");
 }
 
-void updateFile(char *username) {
+void appendFile(char *username) {
     char filename[50], path[100], content[100];
     printf("Enter filename to update: ");
     scanf("%49s", filename);
     
-    sprintf(path, "%s/%s", username, filename);
+    sprintf(path, "%s/%s.txt", username, filename);
     FILE *fp = fopen(path, "a"); // 'a' for append
     if (!fp) { printf("Error opening file!\n"); return; }
 
