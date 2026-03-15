@@ -128,7 +128,7 @@ void createFile(char *username) {
     
     FILE *fp = fopen(path, "w");
     printf("Enter content: ");
-    getchar(); // Clear newline
+    (void)getchar(); // Clear newline
     fgets(content, sizeof(content), stdin);
     fprintf(fp, "%s", content);
     fclose(fp);
@@ -136,17 +136,28 @@ void createFile(char *username) {
 }
 
 void readFile(char *username) {
-    char filename[50], path[100], ch;
+    char filename[50], path[100];
+    int ch;
+
     printf("Enter filename to read: ");
     scanf("%49s", filename);
-    
-    sprintf(path, "%s/%s.txt", username, filename);
-    FILE *fp = fopen(path, "r");
-    if (!fp) { printf("File not found!\n"); return; }
 
-    printf("\n--- CONTENT ---\n");
-    while ((ch = fgetc(fp)) != EOF) putchar(ch);
+    snprintf(path, sizeof(path), "%s/%s.txt", username, filename);
+
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) {
+        printf("File not found!\n");
+        return;
+    }
+
+    printf("\n--- CONTENT ---\n\n");
+
+    while ((ch = fgetc(fp)) != EOF) {
+        putchar(ch);
+    }
+
     fclose(fp);
+
     printf("\n---------------\n");
 }
 
@@ -160,7 +171,7 @@ void appendFile(char *username) {
     if (!fp) { printf("Error opening file!\n"); return; }
 
     printf("Enter text to add: ");
-    getchar();
+    (void)getchar();
     fgets(content, sizeof(content), stdin);
     fprintf(fp, "%s", content);
     fclose(fp);
